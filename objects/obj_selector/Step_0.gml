@@ -1,13 +1,24 @@
+// STEP EVENT
+// Agora podemos verificar player_confirm com segurança
 if (!player_confirm) {
+    // Navegação entre personagens
+    var play_sound = (snd_change != noone); // Verificação mais segura
+    
     if (keyboard_check_pressed(ord("D"))) {
-        player_index = (p1_index + 1) mod array_length(charcters);
+        player_index = (player_index + 1) mod array_length(characters);
+        if (play_sound) audio_play_sound(snd_change, 1, false);
     }
+    
     if (keyboard_check_pressed(ord("A"))) {
-        player_index = (p1_index - 1 + array_length(charcters)) mod array_length(charcters);
+        player_index = (player_index - 1 + array_length(characters)) mod array_length(characters);
+        if (play_sound) audio_play_sound(snd_change, 1, false);
     }
 
-    if (keyboard_check_pressed(ord("Z"))) { // tecla de confirmar
-        global.player_charcter = charcters[player_index];
-        player_index = true;
+    // Confirmação de seleção
+    if (keyboard_check_pressed(ord("Z"))) {
+        global.player_character = characters[player_index];
+        player_confirm = true;
+        if (snd_confirm != noone) audio_play_sound(snd_confirm, 1, false);
+        room_goto(rm_game);
     }
 }
