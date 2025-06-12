@@ -1,6 +1,6 @@
 // Movimentação do slime (irá se mover na direção do jogador)
-var distancia_x = obj_player.x - x;   // Diferença de posição X entre o jogador e o slime
-var distancia_y = obj_player.y - y;   // Diferença de posição Y entre o jogador e o slime
+var distancia_x = obj_warrior.x - x;   // Diferença de posição X entre o jogador e o slime
+var distancia_y = obj_warrior.y - y;   // Diferença de posição Y entre o jogador e o slime
 
 if (vida <= 0){
 	instance_destroy();

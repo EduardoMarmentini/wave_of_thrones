@@ -1,6 +1,6 @@
 // Movimentação do morcego em direção ao jogador (livremente em X e Y)
-var distancia_x = obj_player.x - x;   // Diferença de posição X entre o jogador e o morcego
-var distancia_y = obj_player.y - y;   // Diferença de posição Y entre o jogador e o morcego
+var distancia_x = obj_warrior.x - x;   // Diferença de posição X entre o jogador e o morcego
+var distancia_y = obj_warrior.y - y;   // Diferença de posição Y entre o jogador e o morcego
 
 if (vida <= 0){
 	instance_destroy();

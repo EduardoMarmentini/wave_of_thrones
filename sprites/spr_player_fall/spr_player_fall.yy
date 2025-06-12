@@ -27,8 +27,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"player_sprites",
-    "path":"folders/Sprites/player_sprites.yy",
+    "name":"warrior",
+    "path":"folders/Sprites/player_sprites/warrior.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
