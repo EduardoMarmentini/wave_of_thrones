@@ -14,11 +14,12 @@ if (!player_confirm) {
         if (play_sound) audio_play_sound(snd_change, 1, false);
     }
 
-    // Confirmação de seleção
     if (keyboard_check_pressed(ord("Z"))) {
-        global.player_character = characters[player_index];
-        player_confirm = true;
-        if (snd_confirm != noone) audio_play_sound(snd_confirm, 1, false);
-        room_goto(rm_game);
-    }
+    global.player_character = characters[player_index]; // Nome do personagem (opcional)
+    global.player_selected_object = charcter_objects[player_index]; // Objeto selecionado (obj_warrior, obj_wizard, etc.)
+    
+    player_confirm = true;
+    if (snd_confirm != noone) audio_play_sound(snd_confirm, 1, false);
+    room_goto(Room1);
+}
 }
