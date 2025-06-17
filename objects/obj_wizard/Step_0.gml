@@ -2,7 +2,7 @@
 if (global.vida <= 0) {
     instance_destroy();                      // Destroi o jogador
     show_message("Você morreu!");            // Exibe mensagem de morte
-    room_goto(menu);                         // Volta para o menu
+    room_goto(select_character);                       // Volta para o menu
 }
 
 // Movimento do jogador (A e D)

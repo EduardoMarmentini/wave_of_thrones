@@ -1,11 +1,6 @@
-// Verifica de forma segura antes de deletar
-if (variable_instance_exists(id, "fnt_title")) {
-    if (fnt_title != -1) { // -1 significa fonte inválida/não carregada
-        font_delete(fnt_title);
-        fnt_title = -1; // Marca como já deletada
-        // show_debug_message("Fonte deletada com sucesso"); // Debug opcional
+// Limpeza dos maps de habilidades
+for (var i = 0; i < array_length(character_system.characters); i++) {
+    if (ds_exists(character_system.characters[i].skills, ds_type_map)) {
+        ds_map_destroy(character_system.characters[i].skills);
     }
-}
-else {
-    // show_debug_message("Aviso: fnt_title não existe nesta instância"); // Debug opcional
 }

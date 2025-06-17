@@ -1,35 +1,41 @@
-// DRAW EVENT - Selecionador de Personagem
+// ============== CONFIGURAÇÕES DE LAYOUT ==============
+// (AJUSTE ESTES VALORES PARA MODIFICAR O LAYOUT)
 
-// ============== ÁREA DE CONTROLE PRINCIPAL ==============
-// POSIÇÃO GERAL DE TODOS OS ELEMENTOS
-var base_x = display_get_gui_width() / 2;  // Centro horizontal
-var base_y = display_get_gui_height() / 2; // Centro vertical
-var offset_x = 110;     // Posição horizontal geral
-var offset_y = 190;     // Posição vertical geral
+// Posição base do menu (centro da tela)
+var base_x = display_get_gui_width() / 2;
+var base_y = display_get_gui_height() / 2;
 
-// CONTROLE DE POSIÇÃO DO TEXTO (NOVO)
-var texto_offset_x = -90;  // ← Controla posição horizontal dos textos (negativo = esquerda)
+// POSIÇÃO DO PERSONAGEM (valores padrão: 110, 190)
+var offset_x = 50;
+var offset_y = 190;
 
-// CONTROLE DE TEXTO - POSICIONAMENTO VERTICAL
-var texto_nome_offset_y = -10;   // Posição vertical do nome
-var texto_instrucoes_offset_y = 30; // Distância entre nome e instruções
-var texto_espacamento_sombra = 2;   // Tamanho da sombra
+// TAMANHO DO PERSONAGEM (valores padrão: 200, 210)
+var largura_desejada = 200;
+var altura_desejada = 210;
+var manter_proporcao = true;
 
-// CONTROLE DE TEXTO - APARÊNCIA
-var texto_cor = c_white;  
-var texto_sombra = c_black; 
-var texto_tamanho = 1.5;      // Tamanho do nome
-var instrucoes_tamanho = 1.0; // Tamanho das instruções
-var instrucoes_cor = c_white; // Cor das instruções
-
-// CONTROLE DA SPRITE
-var largura_desejada = 200;   // Largura da sprite
-var altura_desejada = 210;    // Altura da sprite
-var manter_proporcao = false; // Manter proporção?
-// ========================================================
-
-// Calcula escala da sprite
+// ============== INICIALIZAÇÃO DAS VARIÁVEIS ==============
+// (IMPORTANTE: Esta seção deve vir antes de usar as variáveis)
 var current_sprite = character_sprites[player_index];
+var char_name = characters[player_index];  // DEFININDO char_name AQUI
+var skills = (char_name == "Warrior") ? warrior_skills : wizard_skills;
+
+// CORREÇÃO ESPECÍFICA PARA O MAGO (agora usando char_name já definido)
+var correcao_altura = (char_name == "Wizard") ? 15 : 0;
+
+// CONFIGURAÇÕES DOS ÍCONES DE HABILIDADE
+var icon_size = 80;
+var icon_spacing = 90;  
+var icons_start_x = base_x + offset_x + 50;
+var icons_start_y = base_y + offset_y - 200;  
+
+// CONFIGURAÇÕES DE TEXTO
+var texto_x = base_x + offset_x - 30;
+var texto_nome_offset_y = -10;
+var texto_instrucoes_spacing = 40;
+var texto_sombra_offset = 2;
+
+// ============== CÁLCULOS DE ESCALA ==============
 var escala_x = largura_desejada / sprite_get_width(current_sprite);
 var escala_y = altura_desejada / sprite_get_height(current_sprite);
 
@@ -39,13 +45,12 @@ if (manter_proporcao) {
     escala_y = escala_uniforme;
 }
 
-// Correção de altura para o mago
-var correcao_altura = (characters[player_index] == "wizard") ? 15 : 0;
-
-// ============== DESENHO DA SPRITE ==============
 var spr_w = sprite_get_width(current_sprite) * escala_x;
 var spr_h = sprite_get_height(current_sprite) * escala_y;
+var texto_nome_y = base_y + offset_y + (spr_h/2) + texto_nome_offset_y + correcao_altura;
 
+// ============== DESENHO DOS ELEMENTOS ==============
+// 1. DESENHO DO PERSONAGEM
 draw_sprite_ext(
     current_sprite,
     floor(animation_timer) mod sprite_get_number(current_sprite),
@@ -58,40 +63,56 @@ draw_sprite_ext(
     1
 );
 
-// ============== DESENHO DOS TEXTOS ==============
-draw_set_font(-1); // Fonte padrão
+// 2. DESENHO DOS ÍCONES DE HABILIDADE (AGORA VERTICAL)
+if (variable_struct_exists(skills, "basic") && skills.basic != noone) {
+    var icon_scale = icon_size / sprite_get_width(skills.basic);
+    draw_sprite_ext(
+        skills.basic,
+        0,
+        icons_start_x,
+        icons_start_y,  // Primeiro ícone na posição inicial
+        icon_scale,
+        icon_scale,
+        0,
+        c_white,
+        1
+    );
+}
+
+if (variable_struct_exists(skills, "heavy") && skills.heavy != noone) {
+    var icon_scale = icon_size / sprite_get_width(skills.heavy);
+    draw_sprite_ext(
+        skills.heavy,
+        0,
+        icons_start_x,
+        icons_start_y + icon_spacing,  // Segundo ícone abaixo do primeiro
+        icon_scale,
+        icon_scale,
+        0,
+        c_white,
+        1
+    );
+}
+
+// 3. DESENHO DOS TEXTOS
+draw_set_font(-1);
 draw_set_halign(fa_center);
 draw_set_valign(fa_middle);
 
-// Posição dos textos (com novo texto_offset_x aplicado)
-var texto_x = base_x + offset_x + texto_offset_x; // ← Textos movidos para esquerda
-var texto_nome_y = base_y + offset_y + (spr_h/2) + texto_nome_offset_y + correcao_altura;
-
-// Desenha sombra do nome
-draw_set_color(texto_sombra);
-draw_text_transformed(texto_x + texto_espacamento_sombra, 
-                     texto_nome_y + texto_espacamento_sombra, 
-                     characters[player_index], 
-                     texto_tamanho, texto_tamanho, 0);
-
-// Desenha nome do personagem
-draw_set_color(texto_cor);
-draw_text_transformed(texto_x, texto_nome_y, characters[player_index], texto_tamanho, texto_tamanho, 0);
-
-// Desenha instruções
-var texto_instrucoes_y = texto_nome_y + texto_instrucoes_offset_y;
-var instrucoes_texto = "A/D: Trocar personagem\nZ: Selecionar";
-
-draw_set_color(texto_sombra);
-draw_text_transformed(texto_x + texto_espacamento_sombra, 
-                     texto_instrucoes_y + texto_espacamento_sombra, 
-                     instrucoes_texto, 
-                     instrucoes_tamanho, instrucoes_tamanho, 0);
-
-draw_set_color(instrucoes_cor);
-draw_text_transformed(texto_x, texto_instrucoes_y, instrucoes_texto, instrucoes_tamanho, instrucoes_tamanho, 0);
-
-// Reseta configurações
+// Texto do nome (com sombra)
+draw_set_color(c_black);
+draw_text(texto_x + texto_sombra_offset, texto_nome_y + texto_sombra_offset, char_name);
 draw_set_color(c_white);
+draw_text(texto_x, texto_nome_y, char_name);
+
+// Texto das instruções (com sombra)
+var instrucoes_y = texto_nome_y + texto_instrucoes_spacing;
+draw_set_color(c_black);
+draw_text(texto_x + texto_sombra_offset, instrucoes_y + texto_sombra_offset, "A/D: Trocar\nZ: Selecionar");
+draw_set_color(c_white);
+draw_text(texto_x, instrucoes_y, "A/D: Trocar\nZ: Selecionar");
+
+// Reset das configurações de desenho
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
+draw_set_color(c_white);
