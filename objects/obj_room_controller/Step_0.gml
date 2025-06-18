@@ -14,7 +14,7 @@ if (tempo mod 30 == 0) { // A cada meio segundo
     pontos += 1;
 }
 
-/*
+
 if (spawn_timer <= 0) {
     // Escolhe tipo de inimigo aleatório: 0 = slime, 1 = morcego
     var tipo = irandom(1);
@@ -33,4 +33,3 @@ if (spawn_timer <= 0) {
     // Reinicia o timer com base no intervalo atual
     spawn_timer = spawn_interval;
 }
-*/

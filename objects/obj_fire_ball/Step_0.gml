@@ -9,3 +9,5 @@ if (x < -sprite_width || x > room_width + sprite_width ||
     y < -sprite_height || y > room_height + sprite_height) {
     instance_destroy();
 }
+
+

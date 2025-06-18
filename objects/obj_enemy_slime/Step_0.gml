@@ -1,25 +1,59 @@
-// Movimentação do slime (irá se mover na direção do jogador)
-var distancia_x = obj_warrior.x - x;   // Diferença de posição X entre o jogador e o slime
-var distancia_y = obj_warrior.y - y;   // Diferença de posição Y entre o jogador e o slime
+/// @description Comportamento seguro do slime
 
-if (vida <= 0){
-	instance_destroy();
-	global.kill_count += 1;
+// 1. Busca de alvo com verificação extrema
+var alvo = noone;
+if (variable_global_exists("player_object") && object_exists(global.player_object)) {
+    alvo = instance_find(global.player_object, 0);
 }
 
-// Movimentação horizontal na direção do jogador
-if (abs(distancia_x) > 1) {  // Se a diferença for maior que 1 pixel, o slime se move
-    if (distancia_x > 0) {
-        x += velocidade;    // Move para a direita
+if (!instance_exists(alvo)) {
+    // Busca alternativa por personagens
+    var instancias = instance_find_all(obj_warrior);
+    if (array_length(instancias) > 0) {
+        alvo = instancias[0];
     } else {
-        x -= velocidade;    // Move para a esquerda
+        instancias = instance_find_all(obj_wizard);
+        if (array_length(instancias) > 0) alvo = instancias[0];
     }
 }
 
-// Movimentação vertical (sem gravidade para o slime, ele só anda no chão)
-if (place_meeting(x, y + 1, obj_ground)) {  // Verifica se está no chão
-    vsp = 0;  // Não há gravidade se o slime está no chão
-} else {
-    vsp = 10;  // Aplica uma leve gravidade caso o slime esteja no ar
+// 2. Movimentação segura
+if (instance_exists(alvo)) {
+    var distancia_x = alvo.x - x;
+    var distancia_abs = abs(distancia_x);
+    
+    if (distancia_abs > 1) {
+        // Movimento com direção
+        var dir = sign(distancia_x);
+        x += dir * velocidade;
+        direcao = dir;
+        image_xscale = direcao;
+    }
 }
-y += vsp;  // Aplica a movimentação vertical (gravidade)
+
+// 3. Sistema de gravidade seguro
+if (object_exists(obj_ground) && instance_exists(obj_ground)) {
+    if (place_meeting(x, y + 1, obj_ground)) {
+        vsp = 0;
+    } else {
+        vsp = min(vsp + 0.3, 8);
+    }
+}
+y += vsp;
+
+// 4. Animação 100% segura
+if (vsp != 0 && tem_sprite_pulo) {
+    sprite_index = spr_slime_jump;
+} else if (velocidade != 0 && tem_sprite_movimento) {
+    sprite_index = spr_slime_move;
+} else {
+    sprite_index = sprite_padrao;
+}
+
+// 5. Controle de morte robusto
+if (vida <= 0) {
+    if (variable_global_exists("kill_count")) {
+        global.kill_count += 1;
+    }
+    instance_destroy();
+}
