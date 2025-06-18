@@ -1,24 +1,18 @@
-// Inicializa variáveis básicas (opcional, mas recomendado)
+// Verifica se há um objeto definido, senão usa padrão
+if (!variable_global_exists("player_object")) {
+    global.player_object = obj_warrior; // Objeto padrão
+}
+
+// Transforma no personagem selecionado
+if (object_exists(global.player_object)) {
+    instance_change(global.player_object, true);
+} else {
+    show_debug_message("Objeto do personagem não encontrado: " + string(global.player_object));
+    instance_change(obj_warrior, true); // Fallback
+}
+
+// Atributos básicos
 hp = 100;
+max_hp = 100;
 speed = 0;
 attack = 10;
-
-// Verifica se um personagem foi selecionado
-if (variable_global_exists("player_selected_object")) 
-{
-    var target_obj = global.player_selected_object;
-    
-    // Confirma se o objeto existe antes da transformação
-    if (object_exists(target_obj)) 
-    {
-        instance_change(target_obj, true); // Transforma o obj_player no personagem escolhido
-    }
-    else
-    {
-        show_debug_message("Erro: Objeto do personagem não existe (" + string(target_obj) + ")");
-    }
-}
-else
-{
-    show_debug_message("Aviso: Nenhum personagem foi selecionado. Usando obj_player padrão.");
-}
