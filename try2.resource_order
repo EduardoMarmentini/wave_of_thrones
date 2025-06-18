@@ -53,6 +53,7 @@
     {"name":"spr_died_screen","order":6,"path":"sprites/spr_died_screen/spr_died_screen.yy",},
     {"name":"spr_empty","order":1,"path":"sprites/spr_empty/spr_empty.yy",},
     {"name":"spr_grimory","order":2,"path":"sprites/spr_grimory/spr_grimory.yy",},
+    {"name":"spr_kills","order":5,"path":"sprites/spr_kills/spr_kills.yy",},
     {"name":"spr_level01_background","order":1,"path":"sprites/spr_level01_background/spr_level01_background.yy",},
     {"name":"spr_life","order":4,"path":"sprites/spr_life/spr_life.yy",},
     {"name":"spr_logo_game","order":5,"path":"sprites/spr_logo_game/spr_logo_game.yy",},

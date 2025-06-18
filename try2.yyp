@@ -82,6 +82,7 @@
     {"id":{"name":"spr_empty","path":"sprites/spr_empty/spr_empty.yy",},},
     {"id":{"name":"spr_grimory","path":"sprites/spr_grimory/spr_grimory.yy",},},
     {"id":{"name":"spr_ground","path":"sprites/spr_ground/spr_ground.yy",},},
+    {"id":{"name":"spr_kills","path":"sprites/spr_kills/spr_kills.yy",},},
     {"id":{"name":"spr_level01_background","path":"sprites/spr_level01_background/spr_level01_background.yy",},},
     {"id":{"name":"spr_life","path":"sprites/spr_life/spr_life.yy",},},
     {"id":{"name":"spr_logo_game","path":"sprites/spr_logo_game/spr_logo_game.yy",},},
