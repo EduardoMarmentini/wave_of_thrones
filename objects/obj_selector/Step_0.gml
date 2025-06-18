@@ -1,6 +1,7 @@
-// Controle de seleção
+/// @description Controle de seleção de personagem
+
+// 1. Navegação entre personagens
 if (!player_confirm) {
-    // Navegação
     var play_sound = (snd_change != noone);
     
     if (keyboard_check_pressed(ord("D"))) {
@@ -13,18 +14,12 @@ if (!player_confirm) {
         if (play_sound) audio_play_sound(snd_change, 1, false);
     }
 
-    // Confirmação
+    // 2. Confirmação de seleção
     if (keyboard_check_pressed(ord("Z"))) {
         global.player_character = characters[player_index];
         global.player_object = character_objects[player_index];
         global.player_sprite = character_sprites[player_index];
-        
-        // Atribui habilidades corretas
-        if (characters[player_index] == "Warrior") {
-            global.player_skills = warrior_skills;
-        } else {
-            global.player_skills = wizard_skills;
-        }
+        global.player_skills = (characters[player_index] == "Warrior") ? warrior_skills : wizard_skills;
         
         player_confirm = true;
         if (snd_confirm != noone) audio_play_sound(snd_confirm, 1, false);
@@ -32,5 +27,5 @@ if (!player_confirm) {
     }
 }
 
-// Animação
+// 3. Atualização da animação
 animation_timer += 0.1;

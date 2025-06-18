@@ -1,76 +1,63 @@
-// ============== CONFIGURAÇÕES DE LAYOUT ==============
-// (AJUSTE ESTES VALORES PARA MODIFICAR O LAYOUT)
+/// @description Desenho do menu de seleção
 
-// Posição base do menu (centro da tela)
+// 1. Configurações de layout
 var base_x = display_get_gui_width() / 2;
 var base_y = display_get_gui_height() / 2;
-
-// POSIÇÃO DO PERSONAGEM (valores padrão: 110, 190)
 var offset_x = 50;
 var offset_y = 190;
 
-// TAMANHO DO PERSONAGEM (valores padrão: 200, 210)
-var largura_desejada = 200;
-var altura_desejada = 210;
-var manter_proporcao = true;
-
-// ============== INICIALIZAÇÃO DAS VARIÁVEIS ==============
-// (IMPORTANTE: Esta seção deve vir antes de usar as variáveis)
+// 2. Obtenção das variáveis atuais
 var current_sprite = character_sprites[player_index];
-var char_name = characters[player_index];  // DEFININDO char_name AQUI
+var char_name = characters[player_index];
 var skills = (char_name == "Warrior") ? warrior_skills : wizard_skills;
-
-// CORREÇÃO ESPECÍFICA PARA O MAGO (agora usando char_name já definido)
 var correcao_altura = (char_name == "Wizard") ? 15 : 0;
 
-// CONFIGURAÇÕES DOS ÍCONES DE HABILIDADE
-var icon_size = 80;
-var icon_spacing = 90;  
-var icons_start_x = base_x + offset_x + 50;
-var icons_start_y = base_y + offset_y - 200;  
+// 3. Cálculos de tamanho
+var escala_x = 200 / sprite_get_width(current_sprite);
+var escala_y = 210 / sprite_get_height(current_sprite);
+var escala_uniforme = min(escala_x, escala_y);
+var spr_w = sprite_get_width(current_sprite) * escala_uniforme;
+var spr_h = sprite_get_height(current_sprite) * escala_uniforme;
 
-// CONFIGURAÇÕES DE TEXTO
-var texto_x = base_x + offset_x - 30;
-var texto_nome_offset_y = -10;
-var texto_instrucoes_spacing = 40;
-var texto_sombra_offset = 2;
-
-// ============== CÁLCULOS DE ESCALA ==============
-var escala_x = largura_desejada / sprite_get_width(current_sprite);
-var escala_y = altura_desejada / sprite_get_height(current_sprite);
-
-if (manter_proporcao) {
-    var escala_uniforme = min(escala_x, escala_y);
-    escala_x = escala_uniforme;
-    escala_y = escala_uniforme;
-}
-
-var spr_w = sprite_get_width(current_sprite) * escala_x;
-var spr_h = sprite_get_height(current_sprite) * escala_y;
-var texto_nome_y = base_y + offset_y + (spr_h/2) + texto_nome_offset_y + correcao_altura;
-
-// ============== DESENHO DOS ELEMENTOS ==============
-// 1. DESENHO DO PERSONAGEM
+// 4. Desenho do personagem
 draw_sprite_ext(
     current_sprite,
     floor(animation_timer) mod sprite_get_number(current_sprite),
     base_x - (spr_w/2) + offset_x,
     base_y - (spr_h/2) + offset_y + correcao_altura,
-    escala_x, 
-    escala_y,
+    escala_uniforme, 
+    escala_uniforme,
     0,
     c_white,
     1
 );
 
-// 2. DESENHO DOS ÍCONES DE HABILIDADE (AGORA VERTICAL)
+// 5. Desenho dos ícones de habilidades
+var icon_size = 80;
+var icon_spacing = 90;
+var icons_start_x = base_x + offset_x + 50;
+var icons_start_y = base_y + offset_y - 200;
+
+hovered_skill = noone;
+
+// Ícone básico
 if (variable_struct_exists(skills, "basic") && skills.basic != noone) {
     var icon_scale = icon_size / sprite_get_width(skills.basic);
+    var icon_x = icons_start_x;
+    var icon_y = icons_start_y;
+    
+    // Verificação de mouse sobre o ícone
+    if (point_in_circle(device_mouse_x_to_gui(0), device_mouse_y_to_gui(0), 
+                       icon_x, icon_y, icon_size/2)) {
+        hovered_skill = "basic";
+        tooltip_alpha = min(tooltip_alpha + 0.1, 1);
+    }
+    
     draw_sprite_ext(
         skills.basic,
         0,
-        icons_start_x,
-        icons_start_y,  // Primeiro ícone na posição inicial
+        icon_x,
+        icon_y,
         icon_scale,
         icon_scale,
         0,
@@ -79,13 +66,23 @@ if (variable_struct_exists(skills, "basic") && skills.basic != noone) {
     );
 }
 
+// Ícone heavy
 if (variable_struct_exists(skills, "heavy") && skills.heavy != noone) {
     var icon_scale = icon_size / sprite_get_width(skills.heavy);
+    var icon_x = icons_start_x;
+    var icon_y = icons_start_y + icon_spacing;
+    
+    if (point_in_circle(device_mouse_x_to_gui(0), device_mouse_y_to_gui(0), 
+                       icon_x, icon_y, icon_size/2)) {
+        hovered_skill = "heavy";
+        tooltip_alpha = min(tooltip_alpha + 0.1, 1);
+    }
+    
     draw_sprite_ext(
         skills.heavy,
         0,
-        icons_start_x,
-        icons_start_y + icon_spacing,  // Segundo ícone abaixo do primeiro
+        icon_x,
+        icon_y,
         icon_scale,
         icon_scale,
         0,
@@ -94,25 +91,64 @@ if (variable_struct_exists(skills, "heavy") && skills.heavy != noone) {
     );
 }
 
-// 3. DESENHO DOS TEXTOS
+// 6. Tooltips (versão corrigida)
+if (hovered_skill != noone && tooltip_alpha > 0 && ds_map_exists(skill_descriptions, char_name)) {
+    var class_skills = skill_descriptions[? char_name];
+    
+    if (ds_map_exists(class_skills, hovered_skill)) {
+        var desc = class_skills[? hovered_skill];
+        var text = desc.nome + "\n" + desc.desc;
+        
+        // Configurações do tooltip
+        draw_set_font(-1);
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+        draw_set_alpha(tooltip_alpha);
+        
+        // Fundo (versão retangular simples)
+        var text_w = string_width_ext(text, -1, max_tooltip_width);
+        var text_h = string_height_ext(text, -1, max_tooltip_width);
+        var tooltip_x = device_mouse_x_to_gui(0) + 20;
+        var tooltip_y = device_mouse_y_to_gui(0);
+        
+        draw_set_color(make_color_rgb(30, 30, 40));
+        draw_rectangle(tooltip_x - 10, tooltip_y - 10, 
+                      tooltip_x + text_w + 10, 
+                      tooltip_y + text_h + 10, false);
+        
+        // Texto
+        draw_set_color(c_white);
+        draw_text_ext(tooltip_x, tooltip_y, text, -1, max_tooltip_width);
+        
+        // Reset
+        draw_set_alpha(1);
+    }
+} else {
+    tooltip_alpha = max(tooltip_alpha - 0.05, 0);
+}
+
+// 7. Textos do menu
+var texto_x = base_x + offset_x - 30;
+var texto_nome_y = base_y + offset_y + (spr_h/2) - 10 + correcao_altura;
+
 draw_set_font(-1);
 draw_set_halign(fa_center);
 draw_set_valign(fa_middle);
 
-// Texto do nome (com sombra)
+// Nome do personagem
 draw_set_color(c_black);
-draw_text(texto_x + texto_sombra_offset, texto_nome_y + texto_sombra_offset, char_name);
+draw_text(texto_x + 2, texto_nome_y + 2, char_name);
 draw_set_color(c_white);
 draw_text(texto_x, texto_nome_y, char_name);
 
-// Texto das instruções (com sombra)
-var instrucoes_y = texto_nome_y + texto_instrucoes_spacing;
+// Instruções
+var instrucoes_y = texto_nome_y + 40;
 draw_set_color(c_black);
-draw_text(texto_x + texto_sombra_offset, instrucoes_y + texto_sombra_offset, "A/D: Trocar\nZ: Selecionar");
+draw_text(texto_x + 2, instrucoes_y + 2, "A/D: Trocar\nZ: Selecionar");
 draw_set_color(c_white);
 draw_text(texto_x, instrucoes_y, "A/D: Trocar\nZ: Selecionar");
 
-// Reset das configurações de desenho
+// Reset
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
 draw_set_color(c_white);

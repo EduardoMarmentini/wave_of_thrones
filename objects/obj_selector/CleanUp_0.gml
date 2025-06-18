@@ -1,8 +1,14 @@
-// Limpeza segura dos ds_maps
-if (ds_exists(warrior_skills, ds_type_map)) {
-    ds_map_destroy(warrior_skills);
-}
+/// @description Limpeza de memória
 
-if (ds_exists(wizard_skills, ds_type_map)) {
-    ds_map_destroy(wizard_skills);
+// Limpa os ds_maps de descrições
+if (ds_exists(skill_descriptions, ds_type_map)) {
+    var key = ds_map_find_first(skill_descriptions);
+    while (!is_undefined(key)) {
+        var submap = skill_descriptions[? key];
+        if (ds_exists(submap, ds_type_map)) {
+            ds_map_destroy(submap);
+        }
+        key = ds_map_find_next(skill_descriptions, key);
+    }
+    ds_map_destroy(skill_descriptions);
 }
