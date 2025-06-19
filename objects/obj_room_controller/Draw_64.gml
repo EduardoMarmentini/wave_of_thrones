@@ -14,7 +14,7 @@ var skills_pos_x = display_get_gui_width() / 2; // Centralizado
 var skills_pos_y = display_get_gui_height() - 30; // 30px acima da base
 var skills_scale = 0.1;       // Escala dos ícones
 var skills_spacing = 120;      // Espaço entre habilidades
-var skills_offset_x = -80;      // Ajuste fino horizontal (+/- move para os lados)
+var skills_offset_x = -60;      // Ajuste fino horizontal (+/- move para os lados)
 var skills_offset_y = -80;      // Ajuste fino vertical (+/- sobe/desce)
 
 // Configurações dos abates

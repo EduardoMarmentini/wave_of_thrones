@@ -19,9 +19,9 @@ if (spawn_timer <= 0) {
 
     // Spawna o inimigo escolhido
     if (tipo == 0) {
-        instance_create_layer(pos_x, 380, "Instances", obj_enemy_slime);
+        instance_create_layer(pos_x, 380, "Instances_1", obj_enemy_slime);
     } else {
-        instance_create_layer(pos_x, pos_y, "Instances", obj_enemy_bat);
+        instance_create_layer(pos_x, pos_y, "Instances_1", obj_enemy_bat);
     }
 
     // Reinicia o timer com base no intervalo atual
