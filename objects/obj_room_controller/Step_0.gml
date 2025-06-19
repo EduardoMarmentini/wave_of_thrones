@@ -9,12 +9,6 @@ if (tempo mod 600 == 0 && spawn_interval > 30) {
 // === TIMER DE SPAWN ===
 spawn_timer -= 1;
 
-// Aumenta pontos ao longo do tempo
-if (tempo mod 30 == 0) { // A cada meio segundo
-    pontos += 1;
-}
-
-
 if (spawn_timer <= 0) {
     // Escolhe tipo de inimigo aleatório: 0 = slime, 1 = morcego
     var tipo = irandom(1);

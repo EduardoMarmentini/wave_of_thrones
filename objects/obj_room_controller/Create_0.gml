@@ -1,7 +1,6 @@
 /// @description Inicialização à prova de erros
 
-global.vidas = 3;
-global.vida = 100;
+global.vida = 3;
 global.kill_count = 0;
 global.pontos = 0;
 global.tempo = 0;

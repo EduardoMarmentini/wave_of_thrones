@@ -1,5 +1,5 @@
 // Controle de tempo de vida
-tempo_vida -= 1;
+tempo_vidad-= 1;
 if (tempo_vida <= 0) {
     instance_destroy();
 }
