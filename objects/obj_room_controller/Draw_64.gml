@@ -9,11 +9,19 @@ var life_scale = 0.2;         // Escala dos sprites (1 = tamanho original)
 var life_spacing = 70;        // Espaço entre cada vida
 var max_lives = 3;            // Número máximo de vidas visíveis (3 vidas = 3 corações)
 
+// Configurações das habilidades
+var skills_pos_x = display_get_gui_width() / 2; // Centralizado
+var skills_pos_y = display_get_gui_height() - 30; // 30px acima da base
+var skills_scale = 0.1;       // Escala dos ícones
+var skills_spacing = 120;      // Espaço entre habilidades
+var skills_offset_x = -80;      // Ajuste fino horizontal (+/- move para os lados)
+var skills_offset_y = -80;      // Ajuste fino vertical (+/- sobe/desce)
+
 // Configurações dos abates
-var kills_pos_x = display_get_gui_width() - 100;
-var kills_pos_y = display_get_gui_height() - 60;
-var kills_icon_scale = 0.5;
-var kills_icon_spacing = 20;
+var kills_pos_x = display_get_gui_width() - 100; // 100px da direita
+var kills_pos_y = display_get_gui_height() - 60;  // 60px da base
+var kills_icon_scale = 0.5;   // Escala do ícone
+var kills_icon_spacing = 20;  // Espaço entre ícone e texto
 
 // ========= IMPLEMENTAÇÃO =========
 
@@ -22,7 +30,7 @@ draw_set_halign(fa_center);
 draw_set_valign(fa_middle);
 
 // 2. Verificação segura de variáveis
-if (!variable_global_exists("vida")) global.vida = 3;         // Agora o máximo é 3
+if (!variable_global_exists("vida")) global.vida = 3;
 if (!variable_global_exists("kill_count")) global.kill_count = 0;
 
 // 3. Desenho do tempo (centro superior)
@@ -52,17 +60,53 @@ if (sprite_exists(spr_life)) {
     draw_set_halign(fa_center);
 }
 
-// 5. Desenho da pontuação (centro inferior)
-var pontos_texto = string(pontos);
-draw_text_transformed(display_get_gui_width() / 2, display_get_gui_height() - 30, pontos_texto, 1.5, 1.5, 0);
-
+// 5. Desenho das habilidades do personagem (centro inferior) - APENAS SPRITES
+if (variable_global_exists("player_skills")) {
+    if (is_struct(global.player_skills)) {
+        var skill_keys = variable_struct_get_names(global.player_skills);
+        var num_skills = array_length(skill_keys);
+        
+        if (num_skills > 0) {
+            var total_width = (num_skills * skills_spacing) - skills_spacing;
+            var start_x = skills_pos_x - (total_width / 2) + skills_offset_x; // Aplica ajuste fino X
+            
+            for (var i = 0; i < num_skills; i++) {
+                var skill_key = skill_keys[i];
+                var skill_sprite = variable_struct_get(global.player_skills, skill_key);
+                
+                if (sprite_exists(skill_sprite)) {
+                    draw_sprite_ext(
+                        skill_sprite,
+                        0,
+                        start_x + (i * skills_spacing),
+                        skills_pos_y + skills_offset_y, // Aplica ajuste fino Y
+                        skills_scale,
+                        skills_scale,
+                        0,
+                        c_white,
+                        1
+                    );
+                } else {
+                    // Fallback visual (retângulo)
+                    draw_rectangle(
+                        start_x + (i * skills_spacing) - 20,
+                        skills_pos_y + skills_offset_y - 20,
+                        start_x + (i * skills_spacing) + 20,
+                        skills_pos_y + skills_offset_y + 20,
+                        false
+                    );
+                }
+            }
+        }
+    }
+}
 // 6. Desenho dos abates com ícone (canto inferior direito)
 var abates_texto = string(global.kill_count);
 draw_set_halign(fa_right);
 
 if (sprite_exists(spr_kills)) {
     var icon_width = sprite_get_width(spr_kills) * kills_icon_scale;
-    var text_width = string_width(abates_texto) * 1.5; // Ajuste para escala horizontal
+    var text_width = string_width(abates_texto) * 1.5;
 
     draw_sprite_ext(
         spr_kills,
