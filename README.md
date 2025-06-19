@@ -4,7 +4,7 @@
 
 ---
 
-## 🧙 História
+## 📖 História
 
 Em um reino devastado por portais mágicos corrompidos, monstros emergem sem parar, consumindo tudo em seu caminho. Você é um dos últimos guardiões: um poderoso **Mago** ou um feroz **Guerreiro**, e sua missão é simples — **resistir ao máximo** enquanto a maré de criaturas cresce. Cada onda é uma chance de vingança... ou sua queda final.
 
@@ -13,8 +13,8 @@ Em um reino devastado por portais mágicos corrompidos, monstros emergem sem par
 ## 🕹️ Mecânicas de Jogo
 
 - 🎮 **Dois Personagens Jogáveis**  
-  - **Guerreiro**: Ataques corpo a corpo rápidos e habilidades de impacto.
-  - **Mago**: Ataques à distância com feitiços estratégicos.
+  - ** 🤺 Guerreiro**: Ataques corpo a corpo rápidos e habilidades de impacto.
+  - ** 🧙 Mago**: Ataques à distância com feitiços estratégicos.
 
 - ⚔️ **Sistema de Combate com Habilidades**  
   - Cada personagem possui duas habilidades:
