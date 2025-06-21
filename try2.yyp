@@ -103,6 +103,7 @@
     {"id":{"name":"spr_wizard_idle","path":"sprites/spr_wizard_idle/spr_wizard_idle.yy",},},
     {"id":{"name":"spr_wizard_jump","path":"sprites/spr_wizard_jump/spr_wizard_jump.yy",},},
     {"id":{"name":"spr_wizard_run","path":"sprites/spr_wizard_run/spr_wizard_run.yy",},},
+    {"id":{"name":"Sprite32","path":"sprites/Sprite32/Sprite32.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
