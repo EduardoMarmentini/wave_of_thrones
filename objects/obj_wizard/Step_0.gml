@@ -27,10 +27,9 @@ if (hsp != 0 && place_meeting(x + hsp + wall_check, y, obj_wall)) {
 vsp += grv;
 
 // ================= PULO =================
-// Só pula se estiver no chão (evita pulo duplo)
 if (place_meeting(x, y + 1, obj_ground)) {
-    vsp = 0;         // Para a queda ao tocar no chão
-    pulando = false; // Está no chão, pode pular
+    vsp = 0;
+    pulando = false;
 
     if (keyboard_check_pressed(ord("W"))) {
         vsp = pulo;
@@ -38,24 +37,64 @@ if (place_meeting(x, y + 1, obj_ground)) {
     }
 }
 
-// ================= ATAQUE =================
-if (global.is_attacking && pode_atacar) {
-    var slime = instance_place(x, y, obj_enemy_slime);
+// ================= ATAQUES =================
+// Ataque básico (Z)
+if (keyboard_check_pressed(ord("Z")) && cooldown_basic <= 0 && pode_atacar && !global.is_attacking) {
+    cooldown_basic = 0.2; // segundos
+    pode_atacar = false;
+    global.is_attacking = true;
+    sprite_index = spr_wizard_attack;
+    image_index = 0;
+    alarm[0] = 10;
+}
+
+// Ataque pesado (X)
+if (keyboard_check_pressed(ord("X")) && cooldown_heavy <= 0 && pode_atacar && !global.is_attacking) {
+    cooldown_heavy = 5; // segundos
+    pode_atacar = false;
+    global.is_attacking = true;
+    sprite_index = spr_wizard_attack;
+    image_index = 0;
+    alarm[0] = 20;
+}
+
+// Durante o ataque – aplicar dano
+if (global.is_attacking) {
+    var slime = instance_place(x + 16 * facing, y, obj_enemy_slime);
     if (slime != noone) slime.vida -= global.dano;
 
-    var bat = instance_place(x, y, obj_enemy_bat);
+    var bat = instance_place(x + 16 * facing, y, obj_enemy_bat);
     if (bat != noone) bat.vida -= global.dano;
-} else if (!invulneravel) {
-    if (place_meeting(x, y, obj_enemy_slime) || place_meeting(x, y, obj_enemy_bat)) {
+}
+
+// Reduz cooldown
+if (cooldown_basic > 0) cooldown_basic -= 1 / room_speed;
+if (cooldown_heavy > 0) cooldown_heavy -= 1 / room_speed;
+
+// ================= DANO DE INIMIGOS =================
+if (!invulneravel) {
+    var inimigo = instance_place(x, y, obj_enemy_slime);
+    if (inimigo == noone) {
+        inimigo = instance_place(x, y, obj_enemy_bat);
+    }
+
+    if (inimigo != noone) {
         global.vida -= 1;
         invulneravel = true;
-        invul_timer = room_speed * 2;
+        invul_timer = room_speed * 2; // 2 segundos
+        // Adicione efeitos visuais/sonoros aqui se quiser
     }
 }
 
 // ================= ANIMAÇÕES =================
-if (pulando) {
-    sprite_index = spr_wizard_idle; // Substituir por spr_wizard_jump se tiver
+if (global.is_attacking) {
+    sprite_index = spr_wizard_attack;
+} else if (!place_meeting(x, y + 1, obj_ground)) {
+    if (vsp < 0) {
+        sprite_index = spr_wizard_jump; // Se tiver sprite de pulo
+    } else {
+        sprite_index = spr_wizard_idle; // Se tiver sprite de queda
+    }
 } else if (hsp != 0) {
     sprite_index = spr_wizard_run;
 } else {

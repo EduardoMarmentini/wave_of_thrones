@@ -9,6 +9,9 @@ pode_atacar = true;  // Flag para controlar se o jogador pode atacar
 invulneravel = false;
 invul_timer = 0;
 
+cooldown_basic = 0;
+cooldown_heavy = 0;
+
 global.is_attacking = false;
 global.dano = 1;   // Dano do jogador
 global.kill_count = 0; // Quantos mobs matou

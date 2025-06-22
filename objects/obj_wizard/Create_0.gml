@@ -9,6 +9,9 @@ pode_atacar = true;
 invulneravel = false;
 invul_timer = 0;
 
+cooldown_basic = 0;
+cooldown_heavy = 0;
+
 book_inst = instance_create_layer(x, y, "Instances_1", obj_book);
 book_inst.wizard_id = id;
 
