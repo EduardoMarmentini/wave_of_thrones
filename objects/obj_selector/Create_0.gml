@@ -7,13 +7,12 @@ character_objects = [obj_warrior, obj_wizard];
 
 // 2. Habilidades (sprites)
 warrior_skills = {
-    basic: spr_warrior_basic_attack,
-    heavy: spr_warrior_heavy_attack
+    basic: spr_warrior_basic_attack
 };
 
 wizard_skills = {
-    basic: spr_wizard_basic_attack,
-    heavy: spr_wizard_heavy_attack
+    basic: spr_wizard_basic_attack
+
 };
 
 // 3. Descrições das habilidades (estrutura segura)
@@ -25,10 +24,6 @@ ds_map_add(warrior_desc, "basic", {
     nome: "Corte Ascendente (Key Z)",
     desc: "Lança um ataque com sua espada e causa dano moderado"
 });
-ds_map_add(warrior_desc, "heavy", {
-    nome: "Tremor Arcano (Key X)",
-    desc: "Crava sua espada e lança uma onda que deixa os inimigos lentos e os afasta"
-});
 ds_map_add(skill_descriptions, "Warrior", warrior_desc);
 
 // Wizard skills
@@ -37,10 +32,7 @@ ds_map_add(wizard_desc, "basic", {
     nome: "Projétil Flamejante (Left Mouse)",
     desc: "Lança uma bola de fogo azul de seu grimório"
 });
-ds_map_add(wizard_desc, "heavy", {
-    nome: "Escudo Arcano (Key X)",
-    desc: "Cria uma barreira mágica que bloqueia ataques inimigos"
-});
+
 ds_map_add(skill_descriptions, "Wizard", wizard_desc);
 
 // 4. Variáveis de controle

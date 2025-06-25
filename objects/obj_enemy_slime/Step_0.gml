@@ -8,12 +8,10 @@ if (variable_global_exists("player_object") && object_exists(global.player_objec
 
 if (!instance_exists(alvo)) {
     // Busca alternativa por personagens
-    var instancias = instance_find_all(obj_warrior);
-    if (array_length(instancias) > 0) {
-        alvo = instancias[0];
-    } else {
-        instancias = instance_find_all(obj_wizard);
-        if (array_length(instancias) > 0) alvo = instancias[0];
+    if (instance_exists(obj_warrior)) {
+        alvo = instance_find(obj_warrior, 0);
+    } else if (instance_exists(obj_wizard)) {
+        alvo = instance_find(obj_wizard, 0);
     }
 }
 

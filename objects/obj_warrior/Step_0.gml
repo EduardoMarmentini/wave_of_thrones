@@ -1,8 +1,15 @@
 // ================= VERIFICAÇÃO DE VIDA =================
-if (global.vida <= 0) {
+if (global.vida <= 0 && !instance_exists(obj_die_screen)) {
+    var cx = 450;
+    var cy = -10;
+    instance_create_layer(cx, cy, "Instances_1", obj_die_screen);
     instance_destroy();
-    show_message("Você morreu!");
-    room_goto(select_character);
+	if (instance_exists(obj_enemy_slime)) {
+		instance_destroy(obj_enemy_slime)
+	}
+	if (instance_exists(obj_enemy_bat)) {
+		instance_destroy(obj_enemy_bat)
+	}
 }
 
 // ================= MOVIMENTO HORIZONTAL =================
@@ -27,7 +34,6 @@ if (hsp != 0 && place_meeting(x + hsp + wall_check, y, obj_wall)) {
 vsp += grv;
 
 // ================= PULO =================
-// Só pula se estiver no chão (evita pulo duplo)
 if (place_meeting(x, y + 1, obj_ground)) {
     vsp = 0;
     pulando = false;
@@ -41,7 +47,7 @@ if (place_meeting(x, y + 1, obj_ground)) {
 // ================= ATAQUES =================
 // Ataque básico (Z)
 if (keyboard_check_pressed(ord("Z")) && cooldown_basic <= 0 && pode_atacar && !global.is_attacking) {
-    cooldown_basic = 0.2; // segundos
+    cooldown_basic = 0.2;
     pode_atacar = false;
     global.is_attacking = true;
     sprite_index = spr_player_attack;
@@ -51,7 +57,7 @@ if (keyboard_check_pressed(ord("Z")) && cooldown_basic <= 0 && pode_atacar && !g
 
 // Ataque pesado (X)
 if (keyboard_check_pressed(ord("X")) && cooldown_heavy <= 0 && pode_atacar && !global.is_attacking) {
-    cooldown_heavy = 5; // segundos
+    cooldown_heavy = 5;
     pode_atacar = false;
     global.is_attacking = true;
     sprite_index = spr_player_attack;
@@ -62,10 +68,10 @@ if (keyboard_check_pressed(ord("X")) && cooldown_heavy <= 0 && pode_atacar && !g
 // Durante o ataque – aplicar dano
 if (global.is_attacking) {
     var slime = instance_place(x + 16 * facing, y, obj_enemy_slime);
-    if (slime != noone) slime.vida -= 1;
+    if (slime != noone) slime.vida -= global.dano;
 
     var bat = instance_place(x + 16 * facing, y, obj_enemy_bat);
-    if (bat != noone) bat.vida -= 1;
+    if (bat != noone) bat.vida -= global.dano;
 }
 
 // ================= DANO DE INIMIGOS =================
@@ -78,8 +84,7 @@ if (!invulneravel) {
     if (inimigo != noone) {
         global.vida -= 1;
         invulneravel = true;
-        invul_timer = room_speed * 2; // 2 segundos de invulnerabilidade
-        // Aqui você pode adicionar efeitos sonoros ou visuais
+        invul_timer = room_speed * 2;
     }
 }
 

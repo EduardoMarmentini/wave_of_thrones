@@ -9,12 +9,11 @@ if (!instance_exists(alvo)) {
     
     // Busca alternativa se não encontrou
     if (!instance_exists(alvo)) {
-        var instancias = instance_find_all(obj_warrior);
-        if (array_length(instancias) > 0) {
-            alvo = instancias[0];
-        } else {
-            instancias = instance_find_all(obj_wizard);
-            if (array_length(instancias) > 0) alvo = instancias[0];
+        // Procura no obj_warrior
+        if (instance_exists(obj_warrior)) {
+            alvo = instance_find(obj_warrior, 0);
+        } else if (instance_exists(obj_wizard)) {
+            alvo = instance_find(obj_wizard, 0);
         }
     }
 }
@@ -51,7 +50,7 @@ if (vida <= 0) {
         image_speed = 0.25;
     }
     
-    if (!tem_sprite_morte || image_index >= sprite_get_number(sprite_index)-1) {
+    if (!tem_sprite_morte || image_index >= sprite_get_number(sprite_index) - 1) {
         if (variable_global_exists("kill_count")) {
             global.kill_count += 1;
             if (tem_som_morte) audio_play_sound(snd_enemy_death, 1, false);
